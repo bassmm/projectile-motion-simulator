@@ -1,41 +1,33 @@
-# s = ut + 0.5at^2
-# -4.905t^2 +ut - s = 0
-# (u + math.sqrt(math.pow(u,2) - 4*4.905*s)) / (2*-4.905) 
-import math
+import sys
+import pygame
 
-u = 100
-angle = 45
-s_vert = []
-s_hori = []
+pygame.init()
 
+window = width, height = 1200, 800
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode(window)
+fps = 60 
 
-def get_s_vals(u:int, angle:int):
-    s_y = 0
-    t = 0
+ball = pygame.image.load("/home/bassam/Projects/projectile-motion-simulator/intro_ball.gif")
+ballrect = ball.get_rect()
 
-    while s_y >= 0:
-           
-        s_y = int(t*u*math.sin(angle) - 4.905*math.pow(t,2))
-        s_x = int(t*u*math.cos(angle))
-        
-        s_vert.append(s_y)
-        s_hori.append(s_x)
-        
-        t += 1
-        if s_y < 0:
-            s_vert.pop()
-            s_hori.pop()
-            s_vert.append(0)
-            t_at_0 = (u + math.sqrt(math.pow(u,2) - 4*4.905*0)) / (2*-4.905)
-            
-            # Making sure time is always positive!
-            if t_at_0 > 0:
-                t_at_0 = (u - math.sqrt(math.pow(u,2) - 4*4.905*0)) / (2*-4.905)
-               
-            s_hori.append(int(t_at_0*u*math.cos(angle)))
+# suvat values (values are multiplied by framerate)
+grav = -9.81/fps 
+speed = [250.0/fps,0] # pixels per second
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
 
-    return s_hori, s_vert
+    ballrect = ballrect.move(speed)
+    
+    speed[1] -= grav # constant acceleration due to gravity
 
-
-
-
+    if ballrect.bottom > height:
+        speed[1] = -speed[1]*0.9
+    if ballrect.right > width or ballrect.left < 0:
+        speed[0] = -speed[0]+0.9
+    screen.fill((0,0,0))
+    screen.blit(ball, ballrect)
+    pygame.display.flip()
+    clock.tick(fps)
