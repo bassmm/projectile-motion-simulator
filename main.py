@@ -6,28 +6,32 @@ pygame.init()
 window = width, height = 1200, 800
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(window)
+pygame.display.set_caption("Projectile Motion Simulator")  # window title
 fps = 60 
 
-ball = pygame.image.load("/home/bassam/Projects/projectile-motion-simulator/intro_ball.gif")
-ballrect = ball.get_rect()
+# SUVAT values (values are multiplied by framerate)
+vert_distance = 200
+grav = -9.81/fps
+speed = [250.0/fps, 0]  # pixels per second
 
-# suvat values (values are multiplied by framerate)
-grav = -9.81/fps 
-speed = [250.0/fps,0] # pixels per second
-while True:
+ball = pygame.image.load("intro_ball.gif")
+ball_rect = ball.get_rect()
+
+ball_rect.bottomleft = (0, vert_distance)
+
+while True:  # GAME LOOP ---------------------------------------------------------------------------
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-
-    ballrect = ballrect.move(speed)
+    ball_rect = ball_rect.move(speed)
     
-    speed[1] -= grav # constant acceleration due to gravity
+    speed[1] -= grav  # constant acceleration due to gravity
 
-    if ballrect.bottom > height:
+    if ball_rect.bottom > height:
         speed[1] = -speed[1]*0.9
-    if ballrect.right > width or ballrect.left < 0:
+    if ball_rect.right > width or ball_rect.left < 0:
         speed[0] = -speed[0]+0.9
-    screen.fill((0,0,0))
-    screen.blit(ball, ballrect)
+    screen.fill((0, 0, 0))
+    screen.blit(ball, ball_rect)
     pygame.display.flip()
     clock.tick(fps)
