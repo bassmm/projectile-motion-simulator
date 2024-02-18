@@ -27,9 +27,9 @@ while True:  # GAME LOOP -------------------------------------------------------
     
     speed[1] -= grav  # constant acceleration due to gravity
 
-    if ball_rect.bottom > height:
+    if ball_rect.bottom > height - 2:
         speed[1] = -speed[1]*0.9
-    if ball_rect.right > width or ball_rect.left < 0:
+    if ball_rect.right > width - 2 or ball_rect.left < 2:
         speed[0] = -speed[0]+0.9
     screen.fill((0, 0, 0))
     screen.blit(ball, ball_rect)
